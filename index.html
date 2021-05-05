@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Figures Creator</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	
+	<canvas id="drawing"></canvas>
+
+	<div class="figures">
+		
+		<div class="figure" data-figure="rect">Квадрат</div>
+		<div class="figure" data-figure="circle">Круг</div>
+		<div class="figure" data-figure="triangle">Треугольник</div>
+		<div class="figure" data-figure="smile">Улыбка</div>
+
+	</div>
+
+	<div class="params">
+		<p>Ваш цвет:</p>
+		<input type="color" id="color">
+		<p class="sizeName">Ваш размер: <span></span></p>
+		<input type="range" min="10" max="100" id="sizeVal">
+	</div>
+
+	<script src="js/logic.js"></script>
+	<script src="js/figure.js"></script>
+
+	<script>
+		const canvas = document.getElementById('drawing')
+		const figures = document.querySelector('.figures')	
+		const intRange = document.getElementById('sizeVal')
+		const intColor = document.getElementById('color')
+		const valueSize = document.querySelector('.sizeName span')
+		valueSize.textContent = intRange.value
+		const logic = new Logic(canvas)
+
+		const shapeClasses = {
+			rect: Rect,
+			circle: Circle,
+			triangle: Triangle,
+			smile: Smile
+		}
+
+
+		let strokeColor = 'purple' // можно закастомить также инпутом
+		let lineWidth = 5 // можно закастомить также инпутом
+
+
+		intColor.addEventListener('change', e => {
+			if (logic.currentShape) {
+				logic.currentShape.setFillColor(intColor.value)
+			}
+		})
+
+
+		sizeVal.addEventListener('change', e => {
+			valueSize.textContent = intRange.value
+			if (logic.currentShape) {
+				logic.currentShape.setSize(sizeVal.value)
+			}
+		})
+
+
+
+		figures.addEventListener('click', e => {
+			const target = e.target
+
+			if (target && target.dataset) {
+				const { figure } = target.dataset
+				if (figure && shapeClasses.hasOwnProperty(figure)) {
+ 					const MyClass = shapeClasses[figure]
+
+ 					const figureObject = new MyClass()
+
+ 					let fillColor = intColor.value
+ 					let currentSize = sizeVal.value
+
+ 					figureObject.setFillColor(fillColor)
+ 					figureObject.setStrokeColor(strokeColor)
+ 					figureObject.setStrokeWidth(lineWidth)
+ 					figureObject.setSize(currentSize)
+
+ 					logic.setCurrentShape(figureObject)
+
+				}
+
+
+
+			}
+		})
+
+
+		document.addEventListener('keydown', e => {
+			if (e.keyCode === 27) {
+				if (logic.currentShape) {
+					logic.setCurrentShape(null)
+				}
+			}
+		})
+
+
+		canvas.addEventListener('mousemove', e => {
+			if (logic.currentShape) {
+				logic.currentShape.setPosition(e.clientX, e.clientY)
+			}
+		})
+
+		canvas.addEventListener('click', e => {
+
+
+			if (logic.currentShape) {
+
+				const ShapeClass = logic.currentShape.constructor
+				const figure = new ShapeClass(e.clientX, e.clientY)
+
+				let fillColor = intColor.value
+				let currentSize = sizeVal.value
+
+				figure.setStrokeWidth(lineWidth)
+				figure.setStrokeColor(strokeColor)
+				figure.setFillColor(fillColor)
+				figure.setSize(currentSize)
+
+				logic.addShape(logic.currentShape)
+
+				logic.setCurrentShape(figure)
+				
+
+			}
+
+		})
+
+		canvas.addEventListener('wheel', e => {
+			e.preventDefault()
+
+			if (logic.currentShape) {
+
+				let currentSize = logic.currentShape.size + e.deltaY
+
+				logic.currentShape.setSize(currentSize)
+			}
+
+		})
+
+		window.addEventListener('load', onResize)
+		window.addEventListener('resize', onResize)
+
+		function onResize() {
+			canvas.width = window.innerWidth
+			canvas.height = window.innerHeight
+		}
+
+
+
+	</script>
+
+</body>
+</html>

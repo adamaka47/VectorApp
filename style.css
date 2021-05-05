@@ -1,0 +1,63 @@
+body {
+    padding: 0;
+    margin: 0;
+    font: 21px Helvetica;
+    user-select: none;
+}
+
+.params {
+    position: absolute;
+    z-index: 4;
+    top: 20px;
+    left: 20px;
+}
+
+.params p {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.params input {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+#drawing {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.figures {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    border: 1px solid #111;
+    box-shadow: 0 0 7px rgba(0,0,0,0.09);
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+    padding: 10px;
+    background: #fed;
+}
+
+.figure {
+    border-bottom: 1px dashed #111;
+    color: #444;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 4px 0;
+    display: block; 
+}
+
+.figure ~ .figure {
+    margin-top: 5px;
+}
+
+.figure:hover {
+    color: #777;
+}
