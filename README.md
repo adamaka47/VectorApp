@@ -1,0 +1,2 @@
+# VectorApp
+Default vectorize redactor
